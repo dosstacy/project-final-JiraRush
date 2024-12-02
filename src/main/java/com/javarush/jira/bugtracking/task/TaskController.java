@@ -162,4 +162,14 @@ public class TaskController {
     public void addTag(@PathVariable long tagId, @RequestBody String taskTag){
         taskService.addTag(tagId, taskTag);
     }
+
+    @GetMapping("/work-duration/{taskId}")
+    public String getTimeInProgress(@PathVariable long taskId) {
+        return taskService.calculateTaskDuration(taskId, "in_progress", "ready_for_review");
+    }
+
+    @GetMapping("/test-duration/{taskId}")
+    public String getTimeInTesting(@PathVariable long taskId) {
+        return taskService.calculateTaskDuration(taskId, "ready_for_review", "done");
+    }
 }

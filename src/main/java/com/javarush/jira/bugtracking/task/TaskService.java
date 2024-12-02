@@ -146,7 +146,7 @@ public class TaskService {
 
     @Transactional
     public void addTag(long id, String tagName) {
-        if(id < 0){
+        if (id < 0) {
             throw new IllegalArgumentException("Tag id cannot be negative");
         }
 
@@ -157,5 +157,29 @@ public class TaskService {
         task.getTags().add(tagName);
 
         handler.getRepository().saveAndFlush(task);
+    }
+
+    private LocalDateTime getUpdatedTimeForStatus(long taskId, String statusCode) {
+        handler.getRepository().getExisted(taskId);
+        List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskId);
+        if (activities.isEmpty()) {
+            throw new DataConflictException(String.format("No activities found for task '%d'", taskId));
+        }
+
+        for (Activity activity : activities) {
+            if (statusCode.equals(activity.getStatusCode())) {
+                return activity.getUpdated();
+            }
+        }
+        throw new DataConflictException(String.format("No updated time found for status '%s' on task '%d'", statusCode, taskId));
+    }
+
+    public String calculateTaskDuration(long taskId, String startStatusCode, String endStatusCode) {
+        LocalDateTime startTime = getUpdatedTimeForStatus(taskId, startStatusCode);
+        LocalDateTime endTime = getUpdatedTimeForStatus(taskId, endStatusCode);
+
+        Duration duration = Duration.between(startTime, endTime);
+
+        return DurationFormatUtils.formatDuration(duration.toMillis(), "H:mm:ss", true);
     }
 }

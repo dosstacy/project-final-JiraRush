@@ -327,5 +327,10 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
 
 --changeset ishlyakhtenkov:change_UK_USER_BELONG
 
+insert into ACTIVITY ( ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE )
+values (2, 5, 1, '2023-05-15 12:25:10', 'in_progress'),
+       (3, 6, 1, '2023-05-15 14:05:10', 'ready_for_review'),
+       (4, 11, 118, '2023-05-16 10:05:10', 'done');
+
 drop index UK_USER_BELONG;
 create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;

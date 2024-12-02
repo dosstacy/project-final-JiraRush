@@ -159,7 +159,7 @@ public class TaskController {
 
     @PostMapping("tags/{tagId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTag(@PathVariable Long tagId, @RequestBody String taskTag){
+    public void addTag(@PathVariable long tagId, @RequestBody String taskTag){
         taskService.addTag(tagId, taskTag);
     }
 }

@@ -15,10 +15,12 @@ import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.ref.RefType;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class TaskService {
     private final SprintRepository sprintRepository;
     private final TaskExtMapper extMapper;
     private final UserBelongRepository userBelongRepository;
+    private final TaskRepository taskRepository;
 
     @Transactional
     public void changeStatus(long taskId, String statusCode) {
@@ -142,8 +145,7 @@ public class TaskService {
     }
 
     @Transactional
-    public void addTag(Long id, String tagName) {
-        Assert.notNull(id, "Tag id must not be null");
+    public void addTag(long id, String tagName) {
         if(id < 0){
             throw new IllegalArgumentException("Tag id cannot be negative");
         }
